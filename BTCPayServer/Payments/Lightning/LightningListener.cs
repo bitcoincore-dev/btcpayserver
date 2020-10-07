@@ -360,7 +360,8 @@ namespace BTCPayServer.Payments.Lightning
                         if (!_ListenedInvoices.TryGetValue(notification.Id, out var listenedInvoice))
                             continue;
                         if (notification.Id == listenedInvoice.PaymentMethodDetails.InvoiceId &&
-                            notification.BOLT11 == listenedInvoice.PaymentMethodDetails.BOLT11)
+                            (notification.BOLT11 == listenedInvoice.PaymentMethodDetails.BOLT11 || 
+                             listenedInvoice.PaymentMethodDetails.PreviousDestinations.Contains(notification.BOLT11)))
                         {
                             if (notification.Status == LightningInvoiceStatus.Paid &&
                                 notification.PaidAt.HasValue && notification.Amount != null)
